@@ -38,6 +38,11 @@ def go(args):
     df['last_review'] = pd.to_datetime(df['last_review'])
     logger.info("Convert last_review to datetime")
 
+    # drop rows in the dataset that are not in the proper geolocation.
+    # test test_proper_boundaries will failt without this 
+    idx = df['longitude'].between(-74.25, -73.50) & df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
+
     # Save cleaned data in csv format
     tmp_artifact_path = os.path.join(args.tmp_directory, args.output_artifact)
     df.to_csv(tmp_artifact_path)
